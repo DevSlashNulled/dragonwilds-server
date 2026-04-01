@@ -7,7 +7,6 @@ RUN apt-get update && \
 
 # Create a non-root user to run the server
 RUN useradd -m -s /bin/bash dragonwilds
-USER dragonwilds
 
 # Set up directories
 ENV SERVER_DIR="/home/dragonwilds/server"
@@ -15,23 +14,19 @@ ENV CONFIG_DIR="/home/dragonwilds/server/RSDragonwilds/Saved/Config/Linux"
 ENV SAVEGAMES_DIR="/home/dragonwilds/server/RSDragonwilds/Saved/Savegames"
 ENV LOGS_DIR="/home/dragonwilds/server/RSDragonwilds/Saved/Logs"
 
-RUN mkdir -p "${SERVER_DIR}" "${SAVEGAMES_DIR}" "${LOGS_DIR}"
+RUN mkdir -p "${SERVER_DIR}" "${SAVEGAMES_DIR}" "${LOGS_DIR}" && \
+    chown -R dragonwilds:dragonwilds /home/dragonwilds
 
-# Install/update the dedicated server via SteamCMD
-RUN steamcmd +force_install_dir "${SERVER_DIR}" \
-             +login anonymous \
-             +app_update 4019830 validate \
-             +quit
+# Point SteamCMD to the non-root user's home so it doesn't try /root
+ENV HOME="/home/dragonwilds"
 
 # Copy entrypoint
 COPY --chown=dragonwilds:dragonwilds entrypoint.sh /home/dragonwilds/entrypoint.sh
 RUN chmod +x /home/dragonwilds/entrypoint.sh
 
-# Default environment variables for server config
+# Default environment variables for server config (no secrets baked in)
 ENV SERVER_NAME="DragonWilds Server" \
     OWNER_ID="" \
-    ADMIN_PASSWORD="changeme" \
-    WORLD_PASSWORD="" \
     DEFAULT_WORLD_NAME="" \
     SERVER_PORT=7777 \
     AUTO_UPDATE=true
@@ -39,9 +34,11 @@ ENV SERVER_NAME="DragonWilds Server" \
 # Expose the game port (UDP)
 EXPOSE 7777/udp
 
-# Persist save games, config, and logs
-VOLUME ["${SAVEGAMES_DIR}", "${CONFIG_DIR}", "${LOGS_DIR}"]
+# Persist server files, save games, config, and logs
+VOLUME ["${SERVER_DIR}", "${SAVEGAMES_DIR}", "${CONFIG_DIR}", "${LOGS_DIR}"]
 
+# Drop to non-root for runtime
+USER dragonwilds
 WORKDIR ${SERVER_DIR}
 
 ENTRYPOINT ["/home/dragonwilds/entrypoint.sh"]

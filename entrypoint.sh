@@ -5,8 +5,22 @@ SERVER_DIR="/home/dragonwilds/server"
 CONFIG_DIR="${SERVER_DIR}/RSDragonwilds/Saved/Config/Linux"
 CONFIG_FILE="${CONFIG_DIR}/DedicatedServer.ini"
 
-# --- Auto-update on startup ---
-if [ "${AUTO_UPDATE}" = "true" ]; then
+# Default passwords at runtime (not baked into the image)
+ADMIN_PASSWORD="${ADMIN_PASSWORD:-changeme}"
+WORLD_PASSWORD="${WORLD_PASSWORD:-}"
+
+# --- Install / update server files via SteamCMD ---
+# Server files are downloaded at runtime (not build time) because SteamCMD
+# segfaults under QEMU when cross-building on ARM, and this keeps the image
+# small while always pulling the latest version.
+if [ ! -f "${SERVER_DIR}/steamapps/appmanifest_4019830.acf" ]; then
+    echo "[DragonWilds] First run — installing server files (this will take a few minutes)..."
+    steamcmd +force_install_dir "${SERVER_DIR}" \
+             +login anonymous \
+             +app_update 4019830 validate \
+             +quit
+    echo "[DragonWilds] Install complete."
+elif [ "${AUTO_UPDATE}" = "true" ]; then
     echo "[DragonWilds] Checking for server updates..."
     steamcmd +force_install_dir "${SERVER_DIR}" \
              +login anonymous \

@@ -15,11 +15,13 @@ services:
       - AUTO_UPDATE=true      # Update server on every container start
       - FORCE_CONFIG=false    # Set true to regenerate config from env vars
     volumes:
+      - serverfiles:/home/dragonwilds/server
       - savegames:/home/dragonwilds/server/RSDragonwilds/Saved/Savegames
       - config:/home/dragonwilds/server/RSDragonwilds/Saved/Config/Linux
       - logs:/home/dragonwilds/server/RSDragonwilds/Saved/Logs
 
 volumes:
+  serverfiles:
   savegames:
   config:
   logs:
