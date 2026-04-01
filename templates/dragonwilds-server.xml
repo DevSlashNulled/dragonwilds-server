@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>dragonwilds-server</Name>
+  <Repository>devslashnulled/dragonwilds-server</Repository>
+  <Registry>https://hub.docker.com/r/devslashnulled/dragonwilds-server</Registry>
+  <Support>https://forums.unraid.net/topic/XXXXX-support-dragonwilds-server/</Support>
+  <Project>https://github.com/devslashnulled/dragonwilds-server</Project>
+  <Overview>RuneScape: DragonWilds dedicated game server powered by SteamCMD (App 4019830). Supports up to 6 players. Auto-updates on container start.</Overview>
+  <Category>GameServers:</Category>
+  <Icon>https://raw.githubusercontent.com/devslashnulled/dragonwilds-server/main/icon.png</Icon>
+  <Network>bridge</Network>
+  <Requires>Minimum 2GB RAM + 1GB per player (8GB for 6 players). Port 7777/UDP must be forwarded on your router.</Requires>
+  <ExtraParams>--memory=8g</ExtraParams>
+
+  <!-- Game Port (UDP) -->
+  <Config
+    Type="Port"
+    Name="Game Port"
+    Target="7777"
+    Default="7777"
+    Mode="udp"
+    Display="always"
+    Required="true"
+    Description="UDP port for game client connections. Forward this on your router.">7777</Config>
+
+  <!-- Volumes -->
+  <Config
+    Type="Path"
+    Name="Save Games"
+    Target="/home/dragonwilds/server/RSDragonwilds/Saved/Savegames"
+    Default="/mnt/user/appdata/dragonwilds/savegames"
+    Mode="rw"
+    Display="always"
+    Required="true"
+    Description="Persistent world save data.">/mnt/user/appdata/dragonwilds/savegames</Config>
+
+  <Config
+    Type="Path"
+    Name="Config"
+    Target="/home/dragonwilds/server/RSDragonwilds/Saved/Config/Linux"
+    Default="/mnt/user/appdata/dragonwilds/config"
+    Mode="rw"
+    Display="always"
+    Required="true"
+    Description="Server configuration files (DedicatedServer.ini).">/mnt/user/appdata/dragonwilds/config</Config>
+
+  <Config
+    Type="Path"
+    Name="Logs"
+    Target="/home/dragonwilds/server/RSDragonwilds/Saved/Logs"
+    Default="/mnt/user/appdata/dragonwilds/logs"
+    Mode="rw"
+    Display="always"
+    Required="false"
+    Description="Server log output.">/mnt/user/appdata/dragonwilds/logs</Config>
+
+  <!-- Environment Variables -->
+  <Config
+    Type="Variable"
+    Name="Server Name"
+    Target="SERVER_NAME"
+    Default="My DragonWilds Server"
+    Display="always"
+    Required="true"
+    Mask="false"
+    Description="The name shown in the server browser.">My DragonWilds Server</Config>
+
+  <Config
+    Type="Variable"
+    Name="Owner ID"
+    Target="OWNER_ID"
+    Default=""
+    Display="always"
+    Required="true"
+    Mask="false"
+    Description="Your Player ID from the in-game Settings menu. Required to claim server ownership."></Config>
+
+  <Config
+    Type="Variable"
+    Name="Admin Password"
+    Target="ADMIN_PASSWORD"
+    Default="changeme"
+    Display="always"
+    Required="true"
+    Mask="true"
+    Description="Password for server administration.">changeme</Config>
+
+  <Config
+    Type="Variable"
+    Name="World Password"
+    Target="WORLD_PASSWORD"
+    Default=""
+    Display="always"
+    Required="false"
+    Mask="true"
+    Description="Optional password players must enter to join. Leave empty for no password."></Config>
+
+  <Config
+    Type="Variable"
+    Name="Default World Name"
+    Target="DEFAULT_WORLD_NAME"
+    Default=""
+    Display="advanced"
+    Required="false"
+    Mask="false"
+    Description="Name of a specific world save to load. Leave empty to load the latest save."></Config>
+
+  <Config
+    Type="Variable"
+    Name="Server Port"
+    Target="SERVER_PORT"
+    Default="7777"
+    Display="advanced"
+    Required="false"
+    Mask="false"
+    Description="Internal game port. Change only if running multiple servers.">7777</Config>
+
+  <Config
+    Type="Variable"
+    Name="Auto Update"
+    Target="AUTO_UPDATE"
+    Default="true"
+    Display="advanced"
+    Required="false"
+    Mask="false"
+    Description="Check for and install server updates via SteamCMD on every container start.">true</Config>
+
+  <Config
+    Type="Variable"
+    Name="Force Config Regeneration"
+    Target="FORCE_CONFIG"
+    Default="false"
+    Display="advanced"
+    Required="false"
+    Mask="false"
+    Description="Set to true to overwrite DedicatedServer.ini from environment variables on next start.">false</Config>
+</Container>
