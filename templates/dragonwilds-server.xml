@@ -10,7 +10,6 @@
   <Icon>https://raw.githubusercontent.com/devslashnulled/dragonwilds-server/main/icon.png</Icon>
   <Network>bridge</Network>
   <Requires>Minimum 2GB RAM + 1GB per player (8GB for 6 players). Port 7777/UDP must be forwarded on your router.</Requires>
-  <ExtraParams>--memory=8g</ExtraParams>
 
   <!-- Game Port (UDP) -->
   <Config
@@ -26,23 +25,23 @@
   <!-- Volumes -->
   <Config
     Type="Path"
+    Name="Server Files"
+    Target="/home/dragonwilds/server"
+    Default="/mnt/user/appdata/dragonwilds/serverfiles"
+    Mode="rw"
+    Display="always"
+    Required="true"
+    Description="Game server installation (4GB+). Must persist to avoid re-downloading.">/mnt/user/appdata/dragonwilds/serverfiles</Config>
+
+  <Config
+    Type="Path"
     Name="Save Games"
-    Target="/home/dragonwilds/server/RSDragonwilds/Saved/Savegames"
+    Target="/home/dragonwilds/server/RSDragonwilds/Saved/SaveGames"
     Default="/mnt/user/appdata/dragonwilds/savegames"
     Mode="rw"
     Display="always"
     Required="true"
     Description="Persistent world save data.">/mnt/user/appdata/dragonwilds/savegames</Config>
-
-  <Config
-    Type="Path"
-    Name="Config"
-    Target="/home/dragonwilds/server/RSDragonwilds/Saved/Config/Linux"
-    Default="/mnt/user/appdata/dragonwilds/config"
-    Mode="rw"
-    Display="always"
-    Required="true"
-    Description="Server configuration files (DedicatedServer.ini).">/mnt/user/appdata/dragonwilds/config</Config>
 
   <Config
     Type="Path"
@@ -54,7 +53,7 @@
     Required="false"
     Description="Server log output.">/mnt/user/appdata/dragonwilds/logs</Config>
 
-  <!-- Environment Variables -->
+  <!-- Server Settings -->
   <Config
     Type="Variable"
     Name="Server Name"
@@ -73,7 +72,7 @@
     Display="always"
     Required="true"
     Mask="false"
-    Description="Your Player ID from the in-game Settings menu. Required to claim server ownership."></Config>
+    Description="Your Player ID from the in-game Settings menu. Required for server operation."></Config>
 
   <Config
     Type="Variable"
@@ -127,11 +126,21 @@
 
   <Config
     Type="Variable"
-    Name="Force Config Regeneration"
-    Target="FORCE_CONFIG"
-    Default="false"
+    Name="Max Players"
+    Target="MAX_PLAYERS"
+    Default="6"
     Display="advanced"
     Required="false"
     Mask="false"
-    Description="Set to true to overwrite DedicatedServer.ini from environment variables on next start.">false</Config>
+    Description="Maximum concurrent players (1-6). See RAM requirements.">6</Config>
+
+  <Config
+    Type="Variable"
+    Name="Administrator List"
+    Target="ADMINISTRATOR_LIST"
+    Default=""
+    Display="advanced"
+    Required="false"
+    Mask="false"
+    Description="Comma-separated Player IDs for permanent admin access. Example: 12345,67890"></Config>
 </Container>

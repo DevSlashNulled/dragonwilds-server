@@ -13,15 +13,9 @@ services:
       - DEFAULT_WORLD_NAME=   # Optional: name of a specific world save to load
       - SERVER_PORT=7777
       - AUTO_UPDATE=true      # Update server on every container start
-      - FORCE_CONFIG=false    # Set true to regenerate config from env vars
+      - MAX_PLAYERS=6         # 1-6 players
+      - ADMINISTRATOR_LIST=   # Comma-separated Player IDs for permanent admin
     volumes:
-      - serverfiles:/home/dragonwilds/server
-      - savegames:/home/dragonwilds/server/RSDragonwilds/Saved/Savegames
-      - config:/home/dragonwilds/server/RSDragonwilds/Saved/Config/Linux
-      - logs:/home/dragonwilds/server/RSDragonwilds/Saved/Logs
-
-volumes:
-  serverfiles:
-  savegames:
-  config:
-  logs:
+      - ./data/serverfiles:/home/dragonwilds/server
+      - ./data/savegames:/home/dragonwilds/server/RSDragonwilds/Saved/SaveGames
+      - ./data/logs:/home/dragonwilds/server/RSDragonwilds/Saved/Logs
