@@ -1,0 +1,25 @@
+services:
+  dragonwilds:
+    build: .
+    container_name: dragonwilds-server
+    restart: unless-stopped
+    ports:
+      - "7777:7777/udp"
+    environment:
+      - SERVER_NAME=My DragonWilds Server
+      - OWNER_ID=             # Your Player ID from the Settings menu in-game
+      - ADMIN_PASSWORD=changeme
+      - WORLD_PASSWORD=       # Optional: leave empty for no password
+      - DEFAULT_WORLD_NAME=   # Optional: name of a specific world save to load
+      - SERVER_PORT=7777
+      - AUTO_UPDATE=true      # Update server on every container start
+      - FORCE_CONFIG=false    # Set true to regenerate config from env vars
+    volumes:
+      - savegames:/home/dragonwilds/server/RSDragonwilds/Saved/Savegames
+      - config:/home/dragonwilds/server/RSDragonwilds/Saved/Config/Linux
+      - logs:/home/dragonwilds/server/RSDragonwilds/Saved/Logs
+
+volumes:
+  savegames:
+  config:
+  logs:
